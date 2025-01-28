@@ -1,6 +1,7 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 export default function Header() {
   return (
@@ -11,7 +12,9 @@ export default function Header() {
         </View>
         <TouchableOpacity
           className="flex items-center justify-center w-12 h-12"
-          onPress={() => {}}
+          onPress={() => {
+            router.push("../pages/userProfile");
+          }}
         >
           <Ionicons name="person-circle-outline" size={42} color="#DC143C" />
         </TouchableOpacity>
