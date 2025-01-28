@@ -5,7 +5,7 @@ import "../global.css";
 
 const MainLayout = () => {
   useEffect(() => {
-    router.replace("/user");
+    router.replace("/redirect");
   }, []);
 
   return (
