@@ -13,6 +13,7 @@ import PostCard from "@/components/PostCard";
 import CreatePostModal from "@/components/CreatePostModal";
 import { mockPosts } from "@/constants/mockData";
 import Header from "@/app/AppComponents/User/Header";
+import { router } from "expo-router";
 // import Header from "@/AppComponents/User/Header";
 
 export default function Community() {
@@ -81,10 +82,16 @@ export default function Community() {
             >
               {/* User Info */}
               <View className="flex-row items-center mb-3">
-                <Image
-                  source={{ uri: post.userAvatar }}
-                  className="w-10 h-10 rounded-full"
-                />
+                {post.userAvatar ? (
+                  <Image
+                    source={{ uri: post.userAvatar }}
+                    className="w-10 h-10 rounded-full"
+                  />
+                ) : (
+                  <View className="w-10 h-10 rounded-full bg-gray-200 items-center justify-center">
+                    <MaterialIcons name="person" size={24} color="#666" />
+                  </View>
+                )}
                 <View className="ml-3">
                   <Text className="font-bold text-gray-800">
                     {post.userName}
@@ -107,14 +114,14 @@ export default function Community() {
               {/* Interaction Buttons */}
               <View className="flex-row justify-between items-center pt-2 border-t border-gray-100">
                 <TouchableOpacity className="flex-row items-center">
-                  <Ionicons name="heart-outline" size={20} color="#DC143C" />
+                  <Ionicons name="heart-outline" size={20} color="#E85D75" />
                   <Text className="ml-2 text-gray-600">{post.likes}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity className="flex-row items-center">
                   <Ionicons
                     name="chatbubble-outline"
                     size={20}
-                    color="#DC143C"
+                    color="#4A90E2"
                   />
                   <Text className="ml-2 text-gray-600">{post.comments}</Text>
                 </TouchableOpacity>
@@ -122,7 +129,7 @@ export default function Community() {
                   <Ionicons
                     name="share-social-outline"
                     size={20}
-                    color="#DC143C"
+                    color="#50C878"
                   />
                   <Text className="ml-2 text-gray-600">Share</Text>
                 </TouchableOpacity>
@@ -135,7 +142,7 @@ export default function Community() {
       {/* Create Post FAB */}
       <TouchableOpacity
         onPress={() => setModalVisible(true)}
-        className="absolute bottom-6 right-6 bg-[#DC143C] w-16 h-16 rounded-full items-center justify-center shadow-lg"
+        className="absolute bottom-6 right-6 bg-[#4180c8] w-16 h-16 rounded-full items-center justify-center shadow-lg"
       >
         <Ionicons name="add" size={30} color="white" />
       </TouchableOpacity>
@@ -149,6 +156,16 @@ export default function Community() {
           setModalVisible(false);
         }}
       />
+
+      {/* AI Chatbot Button */}
+      <TouchableOpacity
+        className="absolute bottom-24 right-5 w-16 h-16 m-1 rounded-full bg-[#DC143C] justify-center items-center shadow-lg"
+        onPress={() => {
+          router.push("/pages/aiChat");
+        }}
+      >
+        <Ionicons name="chatbubbles-outline" size={28} color="#FFF" />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }

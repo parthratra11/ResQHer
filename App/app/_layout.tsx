@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
-import { router, Slot } from "expo-router";
+import { router, Slot, Stack } from "expo-router";
 import { View } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import "../global.css";
 
 const MainLayout = () => {
@@ -16,5 +17,17 @@ const MainLayout = () => {
 };
 
 export default function RootLayout() {
-  return <MainLayout />;
+  return (
+    // <SafeAreaProvider>
+    //   <Stack>
+    //     <Stack.Screen
+    //       name="(user)"
+    //       options={{
+    //         headerShown: false,
+    //       }}
+    //     />
+    //   </Stack>
+    // </SafeAreaProvider>
+    <MainLayout />
+  );
 }

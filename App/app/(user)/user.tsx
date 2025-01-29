@@ -3,6 +3,7 @@ import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import Header from "../AppComponents/User/Header";
+import * as Location from "expo-location";
 
 const UserDashboard = () => {
   const router = useRouter();
@@ -10,6 +11,36 @@ const UserDashboard = () => {
   const [holdCount, setHoldCount] = useState(null);
   const [recordingTime, setRecordingTime] = useState(null);
   const [isHolding, setIsHolding] = useState(false);
+  const [location, setLocation] = useState(null);
+  const [locationString, setLocationString] = useState("None");
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+
+      // Get readable address
+      try {
+        let addresses = await Location.reverseGeocodeAsync({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        });
+        if (addresses && addresses.length > 0) {
+          const address = addresses[0];
+          setLocationString(
+            `${address.subregion || address.district || ""}, ${address.city}`
+          );
+        }
+      } catch (error) {
+        setLocationString("None");
+      }
+    })();
+  }, []);
 
   // Handle countdown during hold
   useEffect(() => {
@@ -74,7 +105,7 @@ const UserDashboard = () => {
       <View className="flex-row items-center mb-6 mt-2">
         <Ionicons name="location-outline" size={20} color="black" />
         <Text className="text-md text-black ml-1 font-medium">
-          Current Location: Mumbai, India
+          Current Location: {locationString}
         </Text>
       </View>
 
@@ -179,7 +210,7 @@ const UserDashboard = () => {
 
       {/* AI Chatbot Button */}
       <TouchableOpacity
-        className="absolute bottom-5 right-5 w-20 h-20 m-1 rounded-full bg-[#DC143C] justify-center items-center shadow-lg"
+        className="absolute bottom-5 right-5 w-16 h-16 m-1 rounded-full bg-[#DC143C] justify-center items-center shadow-lg"
         onPress={() => {
           router.push("/pages/aiChat");
         }}
