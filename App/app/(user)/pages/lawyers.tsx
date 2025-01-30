@@ -25,7 +25,7 @@ const LAWYERS = [
     languages: ["English", "Hindi"],
     isAvailable: true,
     rating: 4.8,
-    location: "Mumbai Central",
+    location: "Connaught Place, Delhi",
   },
   {
     id: 2,
@@ -35,7 +35,7 @@ const LAWYERS = [
     languages: ["English", "Hindi", "Gujarati"],
     isAvailable: true,
     rating: 4.9,
-    location: "Bandra West",
+    location: "Lajpat Nagar, Delhi",
   },
   {
     id: 3,
@@ -45,7 +45,7 @@ const LAWYERS = [
     languages: ["English", "Marathi"],
     isAvailable: false,
     rating: 4.7,
-    location: "Andheri East",
+    location: "Hauz Khas, Delhi",
   },
   {
     id: 4,
@@ -55,7 +55,7 @@ const LAWYERS = [
     languages: ["English", "Hindi", "Urdu"],
     isAvailable: true,
     rating: 4.9,
-    location: "Colaba",
+    location: "Saket, Delhi",
   },
   {
     id: 5,
@@ -65,7 +65,7 @@ const LAWYERS = [
     languages: ["English", "Hindi", "Bengali"],
     isAvailable: true,
     rating: 4.6,
-    location: "Powai",
+    location: "Dwarka, Delhi",
   },
 ];
 

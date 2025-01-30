@@ -41,7 +41,7 @@ export default function Police() {
         location: {
           lat: 19.076,
           lng: 72.8777,
-          address: "Mumbai Central, Mumbai",
+          address: "Malka Ganj, Delhi",
         },
         timestamp: new Date().toISOString(),
         audioAnalysis: {
@@ -50,7 +50,7 @@ export default function Police() {
           confidence: 0.89,
         },
         victim: {
-          name: "Jane Doe",
+          name: "Ruhani Sharma",
           age: "25",
           contact: "+91 98765 43210",
         },

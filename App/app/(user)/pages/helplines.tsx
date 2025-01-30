@@ -78,7 +78,7 @@ export default function Helplines() {
           <Ionicons
             name={item.icon}
             size={24}
-            color="#2E7D32" // Changed to forest green
+            color="#2E7D32"
             className="mr-2"
           />
           <Text className="text-lg font-semibold text-[#333] ml-2">
@@ -88,7 +88,7 @@ export default function Helplines() {
         <View className="flex-row">
           <TouchableOpacity
             onPress={() => handleCall(item.number)}
-            className="bg-[#1976D2] rounded-full p-2 mr-2" // Changed to blue
+            className="bg-[#1976D2] rounded-full p-2 mr-2"
           >
             <Ionicons name="call" size={20} color="white" />
           </TouchableOpacity>
@@ -103,14 +103,12 @@ export default function Helplines() {
         </View>
       </View>
       <Text className="text-[#666] mt-1">{item.desc}</Text>
-      <Text className="text-[#1976D2] font-medium mt-1">{item.number}</Text> //
-      Changed to blue
+      <Text className="text-[#1976D2] font-medium mt-1">{item.number}</Text>
     </View>
   );
 
   return (
     <View className="flex-1 bg-[#FFF1F3] p-5">
-      {" "}
       <Header />
       <View className="bg-white rounded-xl mb-4 shadow-sm mt-4">
         <TextInput
@@ -130,7 +128,7 @@ export default function Helplines() {
             key={category}
             onPress={() => setSelectedCategory(category)}
             className={`mr-2 mb-6 h-10 px-4 py-2 rounded-full ${
-              selectedCategory === category ? "bg-[#DC143C]" : "bg-white" // Changed to forest green
+              selectedCategory === category ? "bg-[#DC143C]" : "bg-white"
             }`}
           >
             <Text
