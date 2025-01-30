@@ -11,11 +11,15 @@ import {
   TextInput,
   Vibration,
   Modal,
+  Platform,
+  ActivityIndicator,
 } from "react-native";
+import { WebView } from "react-native-webview";
 import { Ionicons } from "@expo/vector-icons";
-import MapView, { Marker, Polyline } from "react-native-maps";
 import Header from "@/app/AppComponents/User/Header";
 import { router } from "expo-router";
+import { Asset } from "expo-asset";
+import * as FileSystem from "expo-file-system";
 
 const DUMMY_ROUTES = [
   {
@@ -32,11 +36,7 @@ const DUMMY_ROUTES = [
       "Turn right",
       "Keep left onto Mahatma Gandhi Road",
       "Turn right onto Mahatma Gandhi Marg",
-      // Add more instructions as needed
     ],
-    bounds: [77.170027, 28.670185, 77.307904, 28.710406],
-    encodedPoints:
-      "gkfnDcn`vMCJ?TBTl@j@zCdCrBzAt@fAd@Zv@n@dHdFX@THvC~BbB|A\\h@HPRd@dAhDu@ViA_D]m@[e@Y]cA{@gBwAMMMQ[o@aEuC}CaC_@YoAg@oB}AyEsDk@m@a@}@l@g@p@c@p@s@bHcGVg@h@gC@]VkBrGwZFUjDoPjCqLlF}PrEiPpE{PfEcP|@eDbA{CtCaL?Ud@eBZy@pDkN`BaG?M\\sATi@HYjAgEhDgMPg@pDaNrCwKpBmH\\}APu@Zw@n@}@XY`Ao@t@a@x@WfGk@XCfDAhAEdTkBzGo@vK{@bBSVKP_@Fs@Co@gBcEQk@S}@Eo@CoABs@Hu@Ls@X_AZs@\\m@dG{F`AcAb@k@@u@Jg@BUR?XCjAMhAWf@Cr@Kl@Qp@[t@e@zCuCNORKRITCT?vC@Ou@pM`@bCg@pAUdCi@XKVOl@g@Va@Tc@Ng@Lg@Fk@Bk@Ak@Ci@gKw_@kBuGgDyLi@oCUeCKoC?kCPaD`AoLD_AF{@JcALm@p@}G^{EZoCZ_Dx@eK\\qDb@cEbBwQVyAb@eAf@}@zD{ENY^cAH_@Be@Fe@Cq@E{@[{B]sAQa@i@wBWaBSsBcA_NW_EOuBKoBi@}GGoAO}@e@wF]}C_@{Ee@uD_AuIKeCEwB?{AC{BKgAgAsHkFyZkBiLo@kE_ByJEiAAqAVeT^gUBkE]i]KmGgAVc@JuAJD~@lAJp@A",
   },
   {
     id: 2,
@@ -52,70 +52,9 @@ const DUMMY_ROUTES = [
       "Turn right",
       "Keep left onto Mahatma Gandhi Road",
       "Turn right onto Mahatma Gandhi Marg",
-      // Add more instructions as needed
     ],
-    bounds: [77.170027, 28.670185, 77.307904, 28.710406],
-    encodedPoints:
-      "gkfnDcn`vMCJ?TBTl@j@zCdCrBzAt@fAd@Zv@n@dHdFX@THvC~BbB|A\\h@HPRd@dAhDu@ViA_D]m@[e@Y]cA{@gBwAMMMQ[o@aEuC}CaC_@YoAg@oB}AyEsDk@m@a@}@l@g@p@c@p@s@bHcGVg@h@gC@]VkBrGwZFUjDoPjCqLlF}PrEiPpE{PfEcP|@eDbA{CtCaL?Ud@eBZy@pDkN`BaG?M\\sATi@HYjAgEhDgMPg@pDaNrCwKpBmH\\}APu@Zw@n@}@XY`Ao@t@a@x@WfGk@XCfDAhAEdTkBzGo@vK{@bBSVKP_@Fs@Co@gBcEQk@S}@Eo@CoABs@Hu@Ls@X_AZs@\\m@dG{F`AcAb@k@@u@Jg@BUR?XCjAMhAWf@Cr@Kl@Qp@[t@e@zCuCNORKRITCT?vC@Ou@pM`@bCg@pAUdCi@XKVOl@g@Va@Tc@Ng@Lg@Fk@Bk@Ak@Ci@gKw_@kBuGgDyLi@oCUeCKoC?kCPaD`AoLD_AF{@JcALm@p@}G^{EZoCZ_Dx@eK\\qDb@cEbBwQVyAb@eAf@}@zD{ENY^cAH_@Be@Fe@Cq@E{@[{B]sAQa@i@wBWaBSsBcA_NW_EOuBKoBi@}GGoAO}@e@wF]}C_@{Ee@uD_AuIKeCEwB?{AC{BKgAgAsHkFyZkBiLo@kE_ByJEiAAqAVeT^gUBkE]i]KmGgAVc@JuAJD~@lAJp@A",
   },
 ];
-
-const DUMMY_SAFE_PLACES = [
-  {
-    id: 1,
-    name: "Police Station",
-    coordinate: { latitude: 28.6139, longitude: 77.209 },
-    type: "police",
-  },
-  {
-    id: 2,
-    name: "Hospital",
-    coordinate: { latitude: 28.615, longitude: 77.21 },
-    type: "hospital",
-  },
-];
-
-// Add this utility function to decode the polyline points
-function decodePolyline(encoded) {
-  const points = [];
-  let index = 0,
-    lat = 0,
-    lng = 0;
-
-  while (index < encoded.length) {
-    let shift = 0,
-      result = 0;
-
-    do {
-      let byte = encoded.charCodeAt(index++) - 63;
-      result |= (byte & 0x1f) << shift;
-      shift += 5;
-    } while (result & 0x20);
-
-    lat += result & 1 ? ~(result >> 1) : result >> 1;
-
-    shift = 0;
-    result = 0;
-
-    do {
-      let byte = encoded.charCodeAt(index++) - 63;
-      result |= (byte & 0x1f) << shift;
-      shift += 5;
-    } while (result & 0x20);
-
-    lng += result & 1 ? ~(result >> 1) : result >> 1;
-
-    points.push({
-      latitude: lat * 1e-5,
-      longitude: lng * 1e-5,
-    });
-  }
-
-  return points;
-}
-
-const ROUTE_POINTS =
-  "gkfnDcn`vMCJ?TBTl@j@zCdCrBzAt@fAd@Zv@n@dHdFX@THvC~BbB|A\\h@HPRd@dAhDu@ViA_D]m@[e@Y]cA{@gBwAMMMQ[o@aEuC}CaC_@YoAg@oB}AyEsDk@m@a@}@l@g@p@c@p@s@bHcGVg@h@gC@]VkBrGwZFUjDoPjCqLlF}PrEiPpE{PfEcP|@eDbA{CtCaL?Ud@eBZy@pDkN`BaG?M\\sATi@HYjAgEhDgMPg@pDaNrCwKpBmH\\}APu@Zw@n@}@XY`Ao@t@a@x@WfGk@XCfDAhAEdTkBzGo@vK{@bBSVKP_@Fs@Co@gBcEQk@S}@Eo@CoABs@Hu@Ls@X_AZs@\\m@dG{F`AcAb@k@@u@Jg@BUR?XCjAMhAWf@Cr@Kl@Qp@[t@e@zCuCNORKRITCT?vC@Ou@pM`@bCg@pAUdCi@XKVOl@g@Va@Tc@Ng@Lg@Fk@Bk@Ak@Ci@gKw_@kBuGgDyLi@oCUeCKoC?kCPaD`AoLD_AF{@JcALm@p@}G^{EZoCZ_Dx@eK\\qDb@cEbBwQVyAb@eAf@}@zD{ENY^cAH_@Be@Fe@Cq@E{@[{B]sAQa@i@wBWaBSsBcA_NW_EOuBKoBi@}GGoAO}@e@wF]}C_@{Ee@uD_AuIKeCEwB?{AC{BKgAgAsHkFyZkBiLo@kE_ByJEiAAqAVeT^gUBkE]i]KmGgAVc@JuAJD~@lAJp@A";
 
 export default function SafeTravel() {
   const [isTracking, setIsTracking] = useState(false);
@@ -124,44 +63,59 @@ export default function SafeTravel() {
   const [startLocation, setStartLocation] = useState("");
   const [endLocation, setEndLocation] = useState("");
   const [showRoutes, setShowRoutes] = useState(false);
-  const [routeCoordinates, setRouteCoordinates] = useState([]);
-  const [mapRegion, setMapRegion] = useState({
-    latitude: 28.6139,
-    longitude: 77.209,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
-  });
   const [timerActive, setTimerActive] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [password, setPassword] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [currentMap, setCurrentMap] = useState("static");
+  const [htmlContent, setHtmlContent] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const alertTimeoutRef = useRef(null);
   const recordingTimeoutRef = useRef(null);
   const timerIntervalRef = useRef(null);
 
-  const USER_PASSWORD = "1234"; // In real app, this should come from secure storage
+  const USER_PASSWORD = "1234";
 
-  // Modify the safety check timer interval to 1 minute
+  const MAP_SOURCES = {
+    static: require("../../../assets/maps/staticmap.html"),
+    route: require("../../../assets/maps/RouteWomen.html"),
+  };
+
+  const loadLocalHtml = async (mapType = "static") => {
+    try {
+      setIsLoading(true);
+      const asset = Asset.fromModule(MAP_SOURCES[mapType]);
+      await asset.downloadAsync();
+      const htmlString = await FileSystem.readAsStringAsync(asset.localUri);
+      setHtmlContent(htmlString);
+    } catch (error) {
+      console.error("Error loading HTML:", error);
+      Alert.alert("Error", "Failed to load map content");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     let interval;
     if (timerActive) {
       interval = setInterval(() => {
         triggerSafetyCheck();
-      }, 60 * 1000); // 1 minute
+      }, 60 * 1000);
     }
     return () => clearInterval(interval);
   }, [timerActive]);
 
   useEffect(() => {
     if (showAlert) {
-      Vibration.vibrate([500, 500], true); // Continuous vibration
+      Vibration.vibrate([500, 500], true);
       alertTimeoutRef.current = setTimeout(() => {
         if (showAlert) {
           setShowAlert(false);
           handleSafetyTimeout();
         }
-      }, 30000); // 30 seconds
+      }, 30000);
     } else {
       Vibration.cancel();
       if (alertTimeoutRef.current) {
@@ -194,9 +148,12 @@ export default function SafeTravel() {
     };
   }, [timerActive]);
 
+  useEffect(() => {
+    loadLocalHtml();
+  }, []);
+
   const startRecording = async () => {
     setIsRecording(true);
-    // Simulate recording for 15 seconds
     recordingTimeoutRef.current = setTimeout(() => {
       stopRecording();
     }, 15000);
@@ -204,8 +161,6 @@ export default function SafeTravel() {
 
   const stopRecording = async () => {
     setIsRecording(false);
-    // Simulate saving recording
-    console.log("Recording simulation completed");
     Alert.alert(
       "Recording Complete",
       "Audio recording has been saved and sent to emergency contacts"
@@ -218,32 +173,16 @@ export default function SafeTravel() {
 
   const handleSafetyTimeout = () => {
     startRecording();
-    // Simulate sending location to police
     Alert.alert(
       "Emergency Protocol Activated",
       "Your current location has been shared with law enforcement."
     );
-
-    // Mock location sharing
-    console.log("Sending location to police:", {
-      latitude: mapRegion.latitude,
-      longitude: mapRegion.longitude,
-      timestamp: new Date().toISOString(),
-      userDetails: {
-        journey: {
-          start: startLocation,
-          destination: endLocation,
-          startTime: new Date(Date.now() - elapsedTime * 1000).toISOString(),
-        },
-      },
-    });
   };
 
   const verifyPassword = () => {
     if (password === USER_PASSWORD) {
       setShowAlert(false);
       setPassword("");
-      // Cancel any pending emergency protocols
       if (alertTimeoutRef.current) {
         clearTimeout(alertTimeoutRef.current);
       }
@@ -255,6 +194,7 @@ export default function SafeTravel() {
   const searchRoutes = () => {
     if (startLocation && endLocation) {
       setShowRoutes(true);
+      setCurrentMap("route");
     } else {
       Alert.alert("Please enter both start and end locations");
     }
@@ -264,13 +204,23 @@ export default function SafeTravel() {
     if (!isTracking) {
       Alert.alert(
         "Journey Started",
-        "Your guardians will be notified of your travel."
+        "Your guardians will be notified of your travel.",
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              setTimerActive(true);
+              setIsTracking(true);
+              loadLocalHtml("route"); // Load route map when journey starts
+            },
+          },
+        ]
       );
-      setTimerActive(true);
     } else {
       setTimerActive(false);
+      setIsTracking(false);
+      loadLocalHtml("static"); // Load static map when journey ends
     }
-    setIsTracking(!isTracking);
   };
 
   const triggerSOS = () => {
@@ -283,22 +233,6 @@ export default function SafeTravel() {
 
   const handleRouteSelect = (route) => {
     setSelectedRoute(route);
-    if (route.encodedPoints) {
-      const decodedCoordinates = decodePolyline(route.encodedPoints);
-      setRouteCoordinates(decodedCoordinates);
-
-      // Calculate bounds to fit the route
-      if (route.bounds) {
-        const [minLon, minLat, maxLon, maxLat] = route.bounds;
-        const newRegion = {
-          latitude: (minLat + maxLat) / 2,
-          longitude: (minLon + maxLon) / 2,
-          latitudeDelta: (maxLat - minLat) * 1.5,
-          longitudeDelta: (maxLon - minLon) * 1.5,
-        };
-        setMapRegion(newRegion);
-      }
-    }
   };
 
   const formatTime = (seconds) => {
@@ -310,13 +244,20 @@ export default function SafeTravel() {
       .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
 
+  const getWebViewSource = () => {
+    if (!htmlContent) return { html: "<div></div>" }; // Provide fallback content
+    return {
+      html: htmlContent,
+      baseUrl: Platform.OS === "android" ? "file:///android_asset/" : "",
+    };
+  };
+
   return (
     <View style={styles.container}>
       <View className="px-4 pt-2 mb-2">
         <Header />
       </View>
 
-      {/* Location Inputs */}
       {!showRoutes && (
         <View style={styles.inputContainer}>
           <View style={styles.inputWrapper}>
@@ -343,34 +284,26 @@ export default function SafeTravel() {
         </View>
       )}
 
-      <MapView
-        style={styles.map}
-        region={mapRegion}
-        onRegionChangeComplete={setMapRegion}
-      >
-        {DUMMY_SAFE_PLACES.map((place) => (
-          <Marker
-            key={place.id}
-            coordinate={place.coordinate}
-            title={place.name}
-          >
-            <Ionicons
-              name={place.type === "police" ? "shield" : "medical"}
-              size={24}
-              color="#007AFF"
-            />
-          </Marker>
-        ))}
-        {selectedRoute && routeCoordinates.length > 0 && (
-          <Polyline
-            coordinates={routeCoordinates}
-            strokeColor={selectedRoute.color}
-            strokeWidth={4}
-          />
-        )}
-      </MapView>
+      {isLoading ? (
+        <View style={[styles.map, styles.centerContent]}>
+          <ActivityIndicator size="large" color="#DC143C" />
+        </View>
+      ) : (
+        <WebView
+          source={getWebViewSource()}
+          style={styles.map}
+          originWhitelist={["*"]}
+          javaScriptEnabled={true}
+          domStorageEnabled={true}
+          startInLoadingState={false}
+          scalesPageToFit={true}
+          onError={(syntheticEvent) => {
+            const { nativeEvent } = syntheticEvent;
+            console.warn("WebView error: ", nativeEvent);
+          }}
+        />
+      )}
 
-      {/* SOS Button */}
       <TouchableOpacity
         className="absolute top-20 right-5 w-16 h-16 rounded-full bg-[#FF3B30] justify-center items-center shadow-lg"
         onPress={triggerSOS}
@@ -379,7 +312,6 @@ export default function SafeTravel() {
         <Text style={styles.sosText}>SOS</Text>
       </TouchableOpacity>
 
-      {/* Timer Display */}
       {isTracking && (
         <View style={styles.timerContainer}>
           <Text style={styles.timerText}>{formatTime(elapsedTime)}</Text>
@@ -471,7 +403,6 @@ export default function SafeTravel() {
         </View>
       </Modal>
 
-      {/* AI Chatbot Button */}
       <TouchableOpacity
         className="absolute bottom-5 right-5 w-16 h-16 m-1 rounded-full bg-[#DC143C] justify-center items-center shadow-lg"
         onPress={() => {
@@ -552,11 +483,6 @@ const styles = StyleSheet.create({
   },
   routesContainer: {
     flex: 1,
-    backgroundColor: "white",
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    marginTop: -20,
-    padding: 20,
   },
   safetyControls: {
     flexDirection: "row",
@@ -700,5 +626,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     marginLeft: 5,
+  },
+  centerContent: {
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

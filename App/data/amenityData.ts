@@ -1,4 +1,5 @@
-export const amenityData = [
+// enhancedAmenityData.ts
+export const enhancedAmenityData = [
   {
     id: "1",
     name: "Delhi Police Headquarters",
