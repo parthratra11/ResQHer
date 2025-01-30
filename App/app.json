@@ -32,7 +32,20 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow ResQHer to access your photos to attach screenshots for feedback."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow ResQHer to use your location."
+        }
+      ],
+      "react-native-ble-plx"
     ],
     "experiments": {
       "typedRoutes": true

@@ -1,6 +1,9 @@
 import React, { useEffect } from "react";
-import { router, Slot } from "expo-router";
+import { router, Slot, Stack } from "expo-router";
 import { View } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { Provider } from "react-redux";
+import { store } from "../store/store";
 import "../global.css";
 
 const MainLayout = () => {
