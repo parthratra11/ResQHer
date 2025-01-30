@@ -13,6 +13,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import MapView, { Marker } from "react-native-maps";
 import LottieView from "lottie-react-native";
 import Header from "@/app/AppComponents/User/Header";
+import { router } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 const EmergencyButton = ({ number, title, description }) => (
   <TouchableOpacity
@@ -149,6 +151,17 @@ export default function PoliceConnect() {
           <Text className="text-white text-center text-lg font-bold">
             Report an Incident
           </Text>
+        </TouchableOpacity>
+
+        {/* AI Chatbot Button */}
+        {/* AI Chatbot Button */}
+        <TouchableOpacity
+          className="absolute bottom-5 right-5 w-16 h-16 m-1 rounded-full bg-[#DC143C] justify-center items-center shadow-lg"
+          onPress={() => {
+            router.push("/pages/aiChat");
+          }}
+        >
+          <Ionicons name="chatbubbles-outline" size={28} color="#FFF" />
         </TouchableOpacity>
 
         {showSuccessAnimation && (

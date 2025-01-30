@@ -272,6 +272,16 @@ export default function DoctorsConnect() {
           </View>
         </View>
       </Modal>
+
+      {/* AI Chatbot Button */}
+      <TouchableOpacity
+        className="absolute bottom-5 right-5 w-16 h-16 m-1 rounded-full bg-[#DC143C] justify-center items-center shadow-lg"
+        onPress={() => {
+          router.push("/pages/aiChat");
+        }}
+      >
+        <Ionicons name="chatbubbles-outline" size={28} color="#FFF" />
+      </TouchableOpacity>
     </View>
   );
 }
