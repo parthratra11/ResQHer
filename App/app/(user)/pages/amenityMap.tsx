@@ -14,6 +14,7 @@ import AmenityFilter from "../../../components/AmenityMap/AmenityFilter";
 import AmenityDetail from "../../../components/AmenityMap/AmenityDetail";
 import SearchBar from "../../../components/AmenityMap/SearchBar";
 import Header from "@/app/AppComponents/User/Header";
+import { router } from "expo-router";
 
 const enhancedAmenityData = [
   // Police Stations
@@ -505,6 +506,16 @@ export default function AmenityMap() {
           </ScrollView>
         </View>
       </View>
+
+      {/* AI Chatbot Button */}
+      <TouchableOpacity
+        className="absolute bottom-16 right-5 w-16 h-16 m-1 rounded-full bg-[#DC143C] justify-center items-center shadow-lg"
+        onPress={() => {
+          router.push("/pages/aiChat");
+        }}
+      >
+        <Ionicons name="chatbubbles-outline" size={28} color="#FFF" />
+      </TouchableOpacity>
 
       {/* Amenity Detail Modal */}
       {showDetail && selectedAmenity && (

@@ -15,6 +15,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import MapView, { Marker, Polyline } from "react-native-maps";
 import Header from "@/app/AppComponents/User/Header";
+import { router } from "expo-router";
 
 const DUMMY_ROUTES = [
   {
@@ -469,6 +470,16 @@ export default function SafeTravel() {
           </View>
         </View>
       </Modal>
+
+      {/* AI Chatbot Button */}
+      <TouchableOpacity
+        className="absolute bottom-5 right-5 w-16 h-16 m-1 rounded-full bg-[#DC143C] justify-center items-center shadow-lg"
+        onPress={() => {
+          router.push("/pages/aiChat");
+        }}
+      >
+        <Ionicons name="chatbubbles-outline" size={28} color="#FFF" />
+      </TouchableOpacity>
 
       {isRecording && (
         <View style={styles.recordingIndicator}>
