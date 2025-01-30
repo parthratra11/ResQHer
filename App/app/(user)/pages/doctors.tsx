@@ -23,7 +23,7 @@ const DOCTORS = [
     languages: ["English", "Hindi"],
     isAvailable: true,
     rating: 4.8,
-    location: "Andheri East",
+    location: "Kailash Colony, Delhi",
     consultationFee: "₹800",
   },
   {
@@ -34,7 +34,7 @@ const DOCTORS = [
     languages: ["English", "Hindi", "Urdu"],
     isAvailable: true,
     rating: 4.9,
-    location: "Bandra West",
+    location: "Green Park, Delhi",
     consultationFee: "₹1000",
   },
   {
@@ -45,7 +45,7 @@ const DOCTORS = [
     languages: ["English", "Gujarati"],
     isAvailable: false,
     rating: 4.7,
-    location: "Powai",
+    location: "Rohini, Delhi",
     consultationFee: "₹500",
   },
   {
@@ -56,7 +56,7 @@ const DOCTORS = [
     languages: ["English", "Malayalam"],
     isAvailable: true,
     rating: 4.6,
-    location: "Malad West",
+    location: "Vasant Kunj, Delhi",
     consultationFee: "₹700",
   },
 ];
