@@ -34,7 +34,7 @@ const UserDashboard = () => {
         if (addresses && addresses.length > 0) {
           const address = addresses[0];
           setLocationString(
-            `${address.subregion || address.district || ""}, ${address.city}`
+            `${address.street}, ${address.city}, ${address.region}`
           );
         }
       } catch (error) {
