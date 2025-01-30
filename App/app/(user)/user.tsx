@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, Modal } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import Header from "../AppComponents/User/Header";
@@ -13,6 +13,7 @@ const UserDashboard = () => {
   const [isHolding, setIsHolding] = useState(false);
   const [location, setLocation] = useState(null);
   const [locationString, setLocationString] = useState("None");
+  const [isCommunityModalVisible, setIsCommunityModalVisible] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -98,6 +99,48 @@ const UserDashboard = () => {
     return "SOS";
   };
 
+  const CommunityModal = () => (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={isCommunityModalVisible}
+      onRequestClose={() => setIsCommunityModalVisible(false)}
+    >
+      <View className="flex-1 justify-center items-center bg-black/50">
+        <View className="bg-white p-6 rounded-xl w-4/5">
+          <Text className="text-xl font-bold mb-4 text-[#DC143C]">
+            Connect with
+          </Text>
+          {[
+            { title: "Police", icon: "shield-outline" },
+            { title: "Lawyers", icon: "briefcase-outline" },
+            { title: "Doctors", icon: "medkit-outline" },
+            { title: "NGOs", icon: "people-outline" },
+            { title: "People", icon: "person-outline" },
+          ].map((item, index) => (
+            <TouchableOpacity
+              key={index}
+              className="flex-row items-center p-3 mb-2 bg-[#FFF1F3] rounded-lg"
+              onPress={() => {
+                setIsCommunityModalVisible(false);
+                router.push(`/pages/${item.title.toLowerCase()}`);
+              }}
+            >
+              <Ionicons name={item.icon} size={24} color="#DC143C" />
+              <Text className="ml-3 text-lg text-[#333]">{item.title}</Text>
+            </TouchableOpacity>
+          ))}
+          <TouchableOpacity
+            className="mt-4 p-2 bg-[#DC143C] rounded-lg"
+            onPress={() => setIsCommunityModalVisible(false)}
+          >
+            <Text className="text-white text-center">Close</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
+  );
+
   return (
     <View className="flex-1 p-5 bg-[#FFF1F3]">
       <Header />
@@ -171,9 +214,7 @@ const UserDashboard = () => {
         <View className="flex-1 mx-1">
           <TouchableOpacity
             className="bg-white p-6 py-8 rounded-xl mb-3 items-center shadow-md shadow-[#DC143C]"
-            onPress={() => {
-              router.push("/pages/community");
-            }}
+            onPress={() => setIsCommunityModalVisible(true)}
           >
             <Ionicons name="people-outline" size={24} color="#DC143C" />
             <Text className="mt-2 text-[#333] font-medium text-center">
@@ -217,6 +258,8 @@ const UserDashboard = () => {
       >
         <Ionicons name="chatbubbles-outline" size={28} color="#FFF" />
       </TouchableOpacity>
+
+      <CommunityModal />
     </View>
   );
 };

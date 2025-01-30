@@ -16,7 +16,7 @@ import Header from "@/app/AppComponents/User/Header";
 import { router } from "expo-router";
 // import Header from "@/AppComponents/User/Header";
 
-export default function Community() {
+export default function PeopleConnect() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filter, setFilter] = useState("recent");
   const [isModalVisible, setModalVisible] = useState(false);
