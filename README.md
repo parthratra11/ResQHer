@@ -72,3 +72,8 @@ To ensure ResQHer’s success, we must:
 - **Encourage Community Participation**: Build a robust network of **volunteers, responders, and mentors**.
 
 ResQHer is not just an app—it’s a movement towards making **Delhi a safer city for women** through **technology, law enforcement, and community-driven change**.
+
+
+Contact
+For any questions or contributions, please reach out at [pranay.rajvanshi@gmail.com] [parthratra11@gmail.com].
+
